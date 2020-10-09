@@ -17,36 +17,78 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	jww "github.com/spf13/jwalterweatherman"
+	"github.com/spf13/viper"
+	drclient "github.com/truschival/drcli/pkg/digitalrooster"
+	"golang.org/x/net/context"
 )
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "list a given resource [podcasts,alarms,radios]",
+	Long: ``}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
-	},
+
+// radiosCmd represents the radios command
+var list_radiosCmd = &cobra.Command{
+	Use:   "radios",
+	Short: "List configured internet radio steams",
+	Long:  `Returns a list of all internet radio streams`,
+	RunE:  readRadioList,
+}
+
+// podcastsCmd represents the podcasts command
+var list_podcastsCmd = &cobra.Command{
+	Use:   "podcasts",
+	Short: "List all podcast rss feeds",
+	Long:  `Returns a list of all configured podcast sources`,
+	RunE:  readPodcastsList,
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+	listCmd.AddCommand(list_radiosCmd)
+	listCmd.AddCommand(list_podcastsCmd)
+}
 
-	// Here you will define your flags and configuration settings.
+func SetupClient() *drclient.APIClient {
+	configuration := drclient.NewConfiguration()
+	configuration.Servers[0].URL= viper.Get("apiurl").(string)
+	return drclient.NewAPIClient(configuration)
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
+func readRadioList(cmd *cobra.Command, args []string) error {
+	var len int32 = 1
+	var offset int32 = 0
+	
+	api_client := SetupClient()
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	resp, r, err := api_client.InternetRadioApi.IradioReadAll(
+		context.Background()).Length(len).Offset(offset).Execute()
+	if err != nil {
+		jww.INFO.Printf("Error when calling `InternetRadioApi.IradioReadAll``: %v\n", err)
+		jww.DEBUG.Printf("Full HTTP response: %v\n", r)
+	}
+
+	jww.INFO.Printf("Response from `RadiosApi.RadiosReadAll`: %v\n", resp)
+	return err
+}
+
+
+// actual reading of podcast list
+func readPodcastsList(cmd *cobra.Command, args []string) error {
+	var len int32 =1
+	var offset int32 =0
+	api_client := SetupClient()	
+	resp, r, err := api_client.PodcastsApi.PodcastsReadAll(
+		context.Background()).Length(len).Offset(offset).Execute()
+	if err != nil {
+		jww.ERROR.Printf("Error when calling `PodcastsApi.PodcastsReadAll``: %v\n", err)
+		jww.INFO.Printf("Full HTTP response: %v\n", r)
+	}
+	// response from `PodcastsReadAll`: []Podcast
+	jww.INFO.Printf("Response from `PodcastsApi.PodcastsReadAll`: %v\n", resp)
+	return err
 }

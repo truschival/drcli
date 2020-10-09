@@ -1,0 +1,617 @@
+openapi: 3.0.0
+info:
+  description: Open API for Digital Rooster
+  license:
+    name: GPLv3
+  title: DigitalRooster
+  version: "1.0"
+servers:
+- url: '{server}/api/1.0/'
+  variables:
+    server:
+      default: http://digitalrooster:6666
+paths:
+  /radios:
+    get:
+      description: returns a list of Internet radio streams
+      operationId: iradio.read_all
+      parameters:
+      - description: number of items if omitted or invalid all remaining elements
+          will be assumed
+        explode: true
+        in: query
+        name: length
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: offset from start of list if omitted or invalid 0 will be assumed
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stations'
+          description: Successfully read stream list
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Read all Internet radio streams
+      tags:
+      - Internet Radio
+    post:
+      operationId: iradio.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Station'
+        description: Internet radio station to create
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceUuid'
+          description: Resource created with success!
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Create a station info and add it to the list
+      tags:
+      - Radios
+  /radios/{id}:
+    delete:
+      operationId: iradio.delete
+      parameters:
+      - description: unique id to identify item
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Request processed with success!
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Delete Internet radio station from list
+      tags:
+      - Radios
+    get:
+      operationId: iradio.read_one
+      parameters:
+      - description: unique id to identify item
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+          description: Successfully read a single radio station
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Read one Internet radio station
+      tags:
+      - Radios
+  /podcasts:
+    get:
+      operationId: podcasts.read_all
+      parameters:
+      - description: number of items if omitted or invalid all remaining elements
+          will be assumed
+        explode: true
+        in: query
+        name: length
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: offset from start of list if omitted or invalid 0 will be assumed
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Podcasts'
+          description: successfully read list
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Read all podcast rss sources
+      tags:
+      - Podcasts
+    post:
+      operationId: podcasts.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Podcast'
+        description: Podcast source to create
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceUuid'
+          description: Resource created with success!
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+      summary: Add a podcast source with RSS feed and add it to the list
+      tags:
+      - Podcasts
+  /podcasts/{id}:
+    delete:
+      operationId: podcasts.delete
+      parameters:
+      - description: unique id to identify item
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Request processed with success!
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Delete Podcast from list
+      tags:
+      - Podcasts
+    get:
+      operationId: podcasts.read_one
+      parameters:
+      - description: unique id to identify item
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Podcast'
+          description: Successfully read Podcast
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Read one Podcast identified by id
+      tags:
+      - Podcasts
+  /alarms:
+    get:
+      operationId: alarms.read_all
+      parameters:
+      - description: number of items if omitted or invalid all remaining elements
+          will be assumed
+        explode: true
+        in: query
+        name: length
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: offset from start of list if omitted or invalid 0 will be assumed
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alarms'
+          description: Successfully read alarm list
+        "404":
+          description: Wrong length/offset
+      summary: Read all Alarms
+      tags:
+      - Alarms
+    post:
+      operationId: alarms.create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alarm'
+        description: Alarm object to create
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceUuid'
+          description: Resource created with success!
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Create a new alarm entry and add it to the list
+      tags:
+      - Alarms
+  /alarms/{id}:
+    delete:
+      operationId: alarms.delete
+      parameters:
+      - description: unique id to identify item
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Request processed with success!
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Delete alarm from list
+      tags:
+      - Alarms
+    get:
+      operationId: alarms.read_one
+      parameters:
+      - description: unique id to identify item
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alarm'
+          description: Successfully read Alarm
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid request parameters!
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Read one Alarm
+      tags:
+      - Alarms
+components:
+  parameters:
+    ArrayLength:
+      description: number of items if omitted or invalid all remaining elements will
+        be assumed
+      explode: true
+      in: query
+      name: length
+      required: false
+      schema:
+        type: integer
+      style: form
+    ArrayOffset:
+      description: offset from start of list if omitted or invalid 0 will be assumed
+      explode: true
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+      style: form
+    id:
+      description: unique id to identify item
+      explode: false
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      style: simple
+  responses:
+    Success:
+      description: Request processed with success!
+    SuccessCreated:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceUuid'
+      description: Resource created with success!
+    InvalidRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Invalid request parameters!
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The specified resource was not found
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Unauthorized
+  schemas:
+    Error:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    ResourceUuid:
+      example:
+        id: id
+      properties:
+        id:
+          description: Uuid of created resource
+          type: string
+      required:
+      - id
+      type: object
+    Station:
+      example:
+        name: name
+        id: id
+        url: url
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+      required:
+      - name
+      - url
+    Stations:
+      items:
+        $ref: '#/components/schemas/Station'
+      type: array
+    Podcast:
+      example:
+        updateInterval: 0
+        id: id
+        title: title
+        url: url
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+        updateInterval:
+          type: integer
+      required:
+      - title
+      - url
+    Podcasts:
+      items:
+        $ref: '#/components/schemas/Podcast'
+      type: array
+    Alarm:
+      example:
+        volume: 0
+        period: once
+        time: time
+        id: id
+        url: url
+        enabled: true
+      properties:
+        time:
+          type: string
+        period:
+          enum:
+          - once
+          - daily
+          - workdays
+          - weekend
+          type: string
+        url:
+          type: string
+        enabled:
+          type: boolean
+        volume:
+          type: integer
+        id:
+          type: string
+      required:
+      - enabled
+      - period
+      - time
+      - url
+    Alarms:
+      items:
+        $ref: '#/components/schemas/Alarm'
+      type: array

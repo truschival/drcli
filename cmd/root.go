@@ -18,14 +18,22 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	"os"
-
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
+	jww "github.com/spf13/jwalterweatherman"
 	"github.com/spf13/viper"
+	"os"
+	fp "path/filepath"
 )
 
-var cfgFile string
+var (
+	cfgFile string
+	home    string
+)
+
+const (
+	defaultFileName string = ".drcli.yaml"
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -41,47 +49,63 @@ var rootCmd = &cobra.Command{
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		jww.ERROR.Println(err)
 		os.Exit(1)
 	}
 }
 
 func init() {
+	jww.SetStdoutThreshold(jww.LevelTrace)
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.drcli.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", ".drcli.yaml",
+		"config file (default is $HOME/.drcli.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	// Find home directory.
+	var err error
+	home, err := homedir.Dir()
+	if err != nil {
+		jww.ERROR.Println(err)
+		os.Exit(1)
+	}
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
+		fmt.Printf("using cfgFile: %s\n", cfgFile)
 	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
 		// Search config in home directory with name ".drcli" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".drcli")
+		viper.SetConfigName(defaultFileName)
 	}
 
+	initDefaultConfig()  // initialize variables, may be overwritten by config
 	viper.AutomaticEnv() // read in environment variables that match
+	
+	if err := viper.ReadInConfig(); err != nil {
+		if os.IsNotExist(err) {
+			err := viper.WriteConfigAs(fp.Join(home, defaultFileName))
+			if err != nil {
+				jww.WARN.Printf(
+					"Creating default config failed! %s\n ",
+					err)
+			}
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		} else {
+			jww.WARN.Printf("could not read config file %s %s\n",
+				cfgFile, err)
+		}
 	}
+}
+
+
+func initDefaultConfig() {
+	jww.TRACE.Println("> initDefaultConfig()")	
+	viper.SetDefault("apiurl", "http://digitalrooster:6666/api/v1")
 }
