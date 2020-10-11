@@ -89,13 +89,10 @@ Class | Method | HTTP request | Description
 ## Documentation For Models
 
  - [Alarm](docs/Alarm.md)
- - [Alarms](docs/Alarms.md)
  - [Error](docs/Error.md)
  - [Podcast](docs/Podcast.md)
- - [Podcasts](docs/Podcasts.md)
  - [ResourceUuid](docs/ResourceUuid.md)
  - [Station](docs/Station.md)
- - [Stations](docs/Stations.md)
 
 
 ## Documentation For Authorization

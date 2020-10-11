@@ -41,7 +41,7 @@ func (r ApiIradioReadAllRequest) Offset(offset int32) ApiIradioReadAllRequest {
 	return r
 }
 
-func (r ApiIradioReadAllRequest) Execute() (Stations, *_nethttp.Response, error) {
+func (r ApiIradioReadAllRequest) Execute() ([]Station, *_nethttp.Response, error) {
 	return r.ApiService.IradioReadAllExecute(r)
 }
 
@@ -60,16 +60,16 @@ func (a *InternetRadioApiService) IradioReadAll(ctx _context.Context) ApiIradioR
 
 /*
  * Execute executes the request
- * @return Stations
+ * @return []Station
  */
-func (a *InternetRadioApiService) IradioReadAllExecute(r ApiIradioReadAllRequest) (Stations, *_nethttp.Response, error) {
+func (a *InternetRadioApiService) IradioReadAllExecute(r ApiIradioReadAllRequest) ([]Station, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Stations
+		localVarReturnValue  []Station
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InternetRadioApiService.IradioReadAll")

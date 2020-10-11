@@ -143,7 +143,7 @@ No authorization required
 
 ## PodcastsReadAll
 
-> Podcasts PodcastsReadAll(ctx).Length(length).Offset(offset).Execute()
+> []Podcast PodcastsReadAll(ctx).Length(length).Offset(offset).Execute()
 
 Read all podcast rss sources
 
@@ -170,7 +170,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `PodcastsApi.PodcastsReadAll``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `PodcastsReadAll`: Podcasts
+    // response from `PodcastsReadAll`: []Podcast
     fmt.Fprintf(os.Stdout, "Response from `PodcastsApi.PodcastsReadAll`: %v\n", resp)
 }
 ```
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Podcasts**](Podcasts.md)
+[**[]Podcast**](Podcast.md)
 
 ### Authorization
 

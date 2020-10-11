@@ -303,7 +303,7 @@ func (r ApiAlarmsReadAllRequest) Offset(offset int32) ApiAlarmsReadAllRequest {
 	return r
 }
 
-func (r ApiAlarmsReadAllRequest) Execute() (Alarms, *_nethttp.Response, error) {
+func (r ApiAlarmsReadAllRequest) Execute() ([]Alarm, *_nethttp.Response, error) {
 	return r.ApiService.AlarmsReadAllExecute(r)
 }
 
@@ -321,16 +321,16 @@ func (a *AlarmsApiService) AlarmsReadAll(ctx _context.Context) ApiAlarmsReadAllR
 
 /*
  * Execute executes the request
- * @return Alarms
+ * @return []Alarm
  */
-func (a *AlarmsApiService) AlarmsReadAllExecute(r ApiAlarmsReadAllRequest) (Alarms, *_nethttp.Response, error) {
+func (a *AlarmsApiService) AlarmsReadAllExecute(r ApiAlarmsReadAllRequest) ([]Alarm, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Alarms
+		localVarReturnValue  []Alarm
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AlarmsApiService.AlarmsReadAll")

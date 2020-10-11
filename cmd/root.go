@@ -17,7 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package cmd
 
 import (
-	"fmt"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	jww "github.com/spf13/jwalterweatherman"
@@ -78,7 +77,6 @@ func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
-		fmt.Printf("using cfgFile: %s\n", cfgFile)
 	} else {
 		// Search config in home directory with name ".drcli" (without extension).
 		viper.AddConfigPath(home)
@@ -87,7 +85,7 @@ func initConfig() {
 
 	initDefaultConfig()  // initialize variables, may be overwritten by config
 	viper.AutomaticEnv() // read in environment variables that match
-	
+
 	if err := viper.ReadInConfig(); err != nil {
 		if os.IsNotExist(err) {
 			err := viper.WriteConfigAs(fp.Join(home, defaultFileName))
@@ -104,8 +102,6 @@ func initConfig() {
 	}
 }
 
-
 func initDefaultConfig() {
-	jww.TRACE.Println("> initDefaultConfig()")	
 	viper.SetDefault("apiurl", "http://digitalrooster:6666/api/v1")
 }

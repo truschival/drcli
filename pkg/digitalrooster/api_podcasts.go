@@ -293,7 +293,7 @@ func (r ApiPodcastsReadAllRequest) Offset(offset int32) ApiPodcastsReadAllReques
 	return r
 }
 
-func (r ApiPodcastsReadAllRequest) Execute() (Podcasts, *_nethttp.Response, error) {
+func (r ApiPodcastsReadAllRequest) Execute() ([]Podcast, *_nethttp.Response, error) {
 	return r.ApiService.PodcastsReadAllExecute(r)
 }
 
@@ -311,16 +311,16 @@ func (a *PodcastsApiService) PodcastsReadAll(ctx _context.Context) ApiPodcastsRe
 
 /*
  * Execute executes the request
- * @return Podcasts
+ * @return []Podcast
  */
-func (a *PodcastsApiService) PodcastsReadAllExecute(r ApiPodcastsReadAllRequest) (Podcasts, *_nethttp.Response, error) {
+func (a *PodcastsApiService) PodcastsReadAllExecute(r ApiPodcastsReadAllRequest) ([]Podcast, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Podcasts
+		localVarReturnValue  []Podcast
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PodcastsApiService.PodcastsReadAll")

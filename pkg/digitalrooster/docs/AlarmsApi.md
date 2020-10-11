@@ -143,7 +143,7 @@ No authorization required
 
 ## AlarmsReadAll
 
-> Alarms AlarmsReadAll(ctx).Length(length).Offset(offset).Execute()
+> []Alarm AlarmsReadAll(ctx).Length(length).Offset(offset).Execute()
 
 Read all Alarms
 
@@ -170,7 +170,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `AlarmsApi.AlarmsReadAll``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `AlarmsReadAll`: Alarms
+    // response from `AlarmsReadAll`: []Alarm
     fmt.Fprintf(os.Stdout, "Response from `AlarmsApi.AlarmsReadAll`: %v\n", resp)
 }
 ```
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Alarms**](Alarms.md)
+[**[]Alarm**](Alarm.md)
 
 ### Authorization
 

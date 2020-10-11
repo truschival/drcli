@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## IradioReadAll
 
-> Stations IradioReadAll(ctx).Length(length).Offset(offset).Execute()
+> []Station IradioReadAll(ctx).Length(length).Offset(offset).Execute()
 
 Read all Internet radio streams
 
@@ -39,7 +39,7 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error when calling `InternetRadioApi.IradioReadAll``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `IradioReadAll`: Stations
+    // response from `IradioReadAll`: []Station
     fmt.Fprintf(os.Stdout, "Response from `InternetRadioApi.IradioReadAll`: %v\n", resp)
 }
 ```
@@ -60,7 +60,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Stations**](Stations.md)
+[**[]Station**](Station.md)
 
 ### Authorization
 
